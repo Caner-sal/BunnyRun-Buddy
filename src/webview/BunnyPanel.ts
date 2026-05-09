@@ -7,6 +7,8 @@ export class BunnyPanel {
   private static instance: BunnyPanel | undefined;
   private readonly panel: vscode.WebviewPanel;
   private disposables: vscode.Disposable[] = [];
+  private isReady = false;
+  private messageQueue: object[] = [];
 
   private constructor(
     panel: vscode.WebviewPanel,
@@ -19,7 +21,11 @@ export class BunnyPanel {
 
     this.panel.webview.onDidReceiveMessage(
       (message: { type: string }) => {
-        if (message.type === 'resetStatsRequested') {
+        if (message.type === 'webviewReady') {
+          this.isReady = true;
+          this.messageQueue.forEach(m => this.panel.webview.postMessage(m));
+          this.messageQueue = [];
+        } else if (message.type === 'resetStatsRequested') {
           vscode.commands.executeCommand('bunnyrun.resetStats');
         }
       },
@@ -35,7 +41,6 @@ export class BunnyPanel {
 
     if (BunnyPanel.instance) {
       BunnyPanel.instance.panel.reveal(column);
-      BunnyPanel.instance.sendInitialStats();
       return;
     }
 
@@ -53,19 +58,20 @@ export class BunnyPanel {
     );
 
     BunnyPanel.instance = new BunnyPanel(panel, context);
-    BunnyPanel.instance.sendInitialStats();
+    BunnyPanel.instance.enqueue(BunnyPanel.instance.buildInitPayload());
   }
 
   static postMessage(message: object): void {
-    BunnyPanel.instance?.panel.webview.postMessage(message);
+    const inst = BunnyPanel.instance;
+    if (!inst) return;
+    inst.enqueue(message);
   }
 
-  private sendInitialStats(): void {
+  private buildInitPayload(): object {
     const stats = new StatsService(this.context.globalState);
     const currentStats = stats.getStats();
     const config = vscode.workspace.getConfiguration('bunnyrun');
-
-    this.panel.webview.postMessage({
+    return {
       type: 'init',
       payload: {
         xp: currentStats.xp,
@@ -76,7 +82,15 @@ export class BunnyPanel {
         petName: config.get<string>('petName', 'Bunny'),
         enableSounds: config.get<boolean>('enableSounds', true)
       }
-    });
+    };
+  }
+
+  private enqueue(message: object): void {
+    if (this.isReady) {
+      this.panel.webview.postMessage(message);
+    } else {
+      this.messageQueue.push(message);
+    }
   }
 
   private update(): void {

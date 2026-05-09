@@ -32,10 +32,10 @@ export async function runCurrentFile(context: vscode.ExtensionContext): Promise<
     return;
   }
 
-  const workspaceFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
-
+  BunnyPanel.createOrShow(context);
   BunnyPanel.postMessage({ type: 'setState', payload: { state: 'running' } });
 
+  const workspaceFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
   const result = await runner.run(workspaceFolder);
 
   const stats = new StatsService(context.globalState);

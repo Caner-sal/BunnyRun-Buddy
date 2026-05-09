@@ -192,4 +192,6 @@
   }
 
   setState('idle');
+
+  vscode.postMessage({ type: 'webviewReady' });
 }());
