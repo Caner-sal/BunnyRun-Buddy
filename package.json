@@ -1,0 +1,84 @@
+{
+  "name": "bunnyrun-buddy",
+  "displayName": "BunnyRun Buddy",
+  "description": "A cute coding companion that reacts to your run results.",
+  "version": "0.1.0",
+  "publisher": "canersal",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Caner-sal/BunnyRun-Buddy.git"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Other"],
+  "keywords": ["bunny", "companion", "gamification", "learning", "beginner"],
+  "main": "./out/extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "bunnyrun.startCompanion",
+        "title": "Bunny: Start Companion"
+      },
+      {
+        "command": "bunnyrun.runCurrentFile",
+        "title": "Bunny: Run Current File"
+      },
+      {
+        "command": "bunnyrun.resetStats",
+        "title": "Bunny: Reset Stats"
+      },
+      {
+        "command": "bunnyrun.toggleSound",
+        "title": "Bunny: Toggle Sound"
+      }
+    ],
+    "configuration": {
+      "title": "BunnyRun Buddy",
+      "properties": {
+        "bunnyrun.petName": {
+          "type": "string",
+          "default": "Bunny",
+          "description": "Your companion bunny's name."
+        },
+        "bunnyrun.enableSounds": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable small sound effects."
+        },
+        "bunnyrun.runPythonCommand": {
+          "type": "string",
+          "default": "python",
+          "description": "Python command to use when running .py files (e.g. python, python3)."
+        },
+        "bunnyrun.runJavaScriptCommand": {
+          "type": "string",
+          "default": "node",
+          "description": "Node.js command to use when running .js files."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src",
+    "pretest": "npm run compile",
+    "test": "vscode-test",
+    "package": "vsce package --no-dependencies"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "@vscode/test-cli": "^0.0.6",
+    "@vscode/test-electron": "^2.3.8",
+    "@vscode/vsce": "^2.22.0",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
+  }
+}
