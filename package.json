@@ -34,6 +34,14 @@
         "title": "Bunny: Toggle Sound"
       }
     ],
+    "keybindings": [
+      {
+        "command": "bunnyrun.runCurrentFile",
+        "key": "ctrl+alt+r",
+        "mac": "cmd+alt+r",
+        "when": "editorTextFocus"
+      }
+    ],
     "configuration": {
       "title": "BunnyRun Buddy",
       "properties": {
