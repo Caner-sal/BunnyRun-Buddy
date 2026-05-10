@@ -62,6 +62,9 @@ export function getWebviewHtml(
         <div class="carrot-container" id="carrotContainer">
           <div class="carrot" id="carrot">🥕</div>
         </div>
+        <div class="cry-container" id="cryContainer">
+          <div class="cry-emoji">😢</div>
+        </div>
         <div class="hearts-container" id="heartsContainer"></div>
         <div class="tears-container" id="tearsContainer"></div>
         <div class="zzz-container" id="zzzContainer">

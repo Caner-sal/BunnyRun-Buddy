@@ -17,6 +17,7 @@
   const bestStreakDisplay = document.getElementById('bestStreakDisplay');
   const carrotsDisplay = document.getElementById('carrotsDisplay');
   const petNameDisplay = document.getElementById('petName');
+  const cryContainer = document.getElementById('cryContainer');
   const resetBtn = document.getElementById('resetBtn');
 
   const SUCCESS_MESSAGES = [
@@ -115,14 +116,21 @@
     if (mouth) mouth.classList.add('sad');
     const eyes = document.querySelectorAll('.eye');
     eyes.forEach(e => e.classList.add('sad'));
+
+    if (cryContainer) {
+      cryContainer.classList.add('visible');
+      setTimeout(() => cryContainer.classList.remove('visible'), 2200);
+    }
+
     if (tearsContainer) {
       tearsContainer.classList.add('visible');
-      const t1 = document.createElement('div');
-      const t2 = document.createElement('div');
-      t1.className = 'tear';
-      t2.className = 'tear';
-      tearsContainer.appendChild(t1);
-      tearsContainer.appendChild(t2);
+      tearsContainer.innerHTML = '';
+      for (let i = 0; i < 6; i++) {
+        const tear = document.createElement('div');
+        tear.className = 'tear';
+        tear.style.animationDelay = (i * 0.25) + 's';
+        tearsContainer.appendChild(tear);
+      }
     }
 
     const msg = ERROR_MESSAGES[Math.floor(Math.random() * ERROR_MESSAGES.length)];

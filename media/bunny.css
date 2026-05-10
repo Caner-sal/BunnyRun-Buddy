@@ -220,6 +220,28 @@ body {
   font-size: 28px;
 }
 
+/* ===== CRY EMOJI ===== */
+.cry-container {
+  position: absolute;
+  bottom: 60px;
+  left: 0px;
+  opacity: 0;
+}
+
+.cry-emoji {
+  font-size: 28px;
+}
+
+.cry-container.visible {
+  opacity: 1;
+  animation: cryBob 0.5s ease-in-out 2;
+}
+
+@keyframes cryBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
 /* ===== HEARTS ===== */
 .hearts-container {
   position: absolute;
@@ -241,20 +263,20 @@ body {
 /* ===== TEARS ===== */
 .tears-container {
   position: absolute;
-  top: 80px;
+  top: 60px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 12px;
+  gap: 6px;
   opacity: 0;
 }
 
 .tear {
-  width: 6px;
-  height: 10px;
-  background: #7ec8e3;
+  width: 8px;
+  height: 16px;
+  background: #5bc0de;
   border-radius: 50% 50% 60% 60%;
-  animation: tearFall 0.8s ease-in infinite;
+  animation: tearFall 1s ease-in infinite;
 }
 
 /* ===== ZZZ ===== */
@@ -326,10 +348,10 @@ body {
 
 @keyframes sadShake {
   0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-4px); }
-  40% { transform: translateX(4px); }
-  60% { transform: translateX(-4px); }
-  80% { transform: translateX(4px); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-8px); }
+  80% { transform: translateX(8px); }
 }
 
 @keyframes celebrateJump {
@@ -359,7 +381,7 @@ body {
 
 @keyframes tearFall {
   0% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(16px); opacity: 0; }
+  100% { transform: translateY(28px); opacity: 0; }
 }
 
 @keyframes zzzFloat {
@@ -382,7 +404,7 @@ body {
 }
 
 .bunny.sad {
-  animation: sadShake 0.5s ease-in-out 1;
+  animation: sadShake 0.6s ease-in-out 3;
 }
 
 .bunny.celebrating {
