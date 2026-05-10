@@ -14,6 +14,10 @@
   },
   "categories": ["Other"],
   "keywords": ["bunny", "companion", "gamification", "learning", "beginner"],
+  "activationEvents": [
+    "onLanguage:python",
+    "onLanguage:javascript"
+  ],
   "main": "./out/extension",
   "contributes": {
     "commands": [
@@ -23,7 +27,8 @@
       },
       {
         "command": "bunnyrun.runCurrentFile",
-        "title": "Bunny: Run Current File"
+        "title": "Bunny: Run Current File",
+        "icon": "$(play)"
       },
       {
         "command": "bunnyrun.resetStats",
@@ -42,6 +47,15 @@
         "when": "editorTextFocus"
       }
     ],
+    "menus": {
+      "editor/title/run": [
+        {
+          "command": "bunnyrun.runCurrentFile",
+          "when": "resourceLangId == python || resourceLangId == javascript",
+          "group": "navigation"
+        }
+      ]
+    },
     "configuration": {
       "title": "BunnyRun Buddy",
       "properties": {
