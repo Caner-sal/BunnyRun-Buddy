@@ -38,11 +38,13 @@ export async function runCurrentFile(context: vscode.ExtensionContext): Promise<
   const workspaceFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
   const result = await runner.run(workspaceFolder);
 
+  const isError = result.status !== 'success' || !!(result.stderr && result.stderr.trim());
+
   const stats = new StatsService(context.globalState);
-  if (result.status === 'success') {
-    stats.onSuccess();
-  } else {
+  if (isError) {
     stats.onFailure();
+  } else {
+    stats.onSuccess();
   }
 
   const currentStats = stats.getStats();
@@ -51,7 +53,8 @@ export async function runCurrentFile(context: vscode.ExtensionContext): Promise<
   outputChannel.appendLine('=== BunnyRun Buddy ===');
   outputChannel.appendLine(`File: ${result.filePath}`);
   outputChannel.appendLine(`Language: ${result.language}`);
-  outputChannel.appendLine(`Status: ${result.status}`);
+  outputChannel.appendLine(`Status: ${isError ? 'error' : 'success'}`);
+  outputChannel.appendLine(`Exit Code: ${result.exitCode ?? 0}`);
   outputChannel.appendLine(`Duration: ${result.durationMs}ms`);
   if (result.stdout) {
     outputChannel.appendLine('\n--- Output ---');
@@ -66,7 +69,9 @@ export async function runCurrentFile(context: vscode.ExtensionContext): Promise<
   BunnyPanel.postMessage({
     type: 'runResult',
     payload: {
-      status: result.status,
+      status: isError ? 'error' : 'success',
+      stderr: result.stderr ?? '',
+      exitCode: result.exitCode ?? 0,
       xp: currentStats.xp,
       level: currentStats.level,
       streak: currentStats.currentStreak,

@@ -178,7 +178,10 @@
 
       case 'runResult':
         updateStats(message.payload);
-        if (message.payload.status === 'success') {
+        var failed = message.payload.status !== 'success'
+          || !!message.payload.stderr
+          || message.payload.exitCode !== 0;
+        if (!failed) {
           showSuccess(message.payload);
         } else {
           showError();
