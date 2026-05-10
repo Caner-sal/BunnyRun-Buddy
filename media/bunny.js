@@ -147,6 +147,19 @@
     }, 2500);
   }
 
+  function showDeath(payload) {
+    setState('dead');
+    if (mouth) mouth.classList.add('dead');
+    showMessage('The bunny has fallen... 💀');
+
+    setTimeout(() => {
+      setState('idle');
+      if (mouth) mouth.classList.remove('dead');
+      updateStats(payload);
+      showMessage('A new bunny has been born! 🐣');
+    }, 3000);
+  }
+
   function showSleeping() {
     setState('sleeping');
     if (zzzContainer) zzzContainer.classList.add('visible');
@@ -177,14 +190,18 @@
         break;
 
       case 'runResult':
-        updateStats(message.payload);
-        var failed = message.payload.status !== 'success'
-          || !!message.payload.stderr
-          || message.payload.exitCode !== 0;
-        if (!failed) {
-          showSuccess(message.payload);
+        if (message.payload.status === 'dead') {
+          showDeath(message.payload);
         } else {
-          showError();
+          updateStats(message.payload);
+          var failed = message.payload.status !== 'success'
+            || !!message.payload.stderr
+            || message.payload.exitCode !== 0;
+          if (!failed) {
+            showSuccess(message.payload);
+          } else {
+            showError();
+          }
         }
         break;
 

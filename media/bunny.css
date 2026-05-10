@@ -189,6 +189,13 @@ body {
   border-radius: 50% 50% 0 0;
 }
 
+.mouth.dead {
+  border-bottom: none;
+  border-top: 2px solid #2d2d2d;
+  border-radius: 50% 50% 0 0;
+  width: 16px;
+}
+
 .bunny-body {
   width: 52px;
   height: 44px;
@@ -413,6 +420,17 @@ body {
 
 .bunny.sleeping {
   animation: sleepBreath 2.5s ease-in-out infinite;
+}
+
+.bunny.dead {
+  animation: bunnyDie 1.5s ease-in forwards;
+}
+
+@keyframes bunnyDie {
+  0%   { transform: rotate(0deg) scale(1); opacity: 1; }
+  40%  { transform: rotate(-15deg) scale(0.85); opacity: 0.7; }
+  70%  { transform: rotate(30deg) scale(0.5); opacity: 0.4; }
+  100% { transform: rotate(90deg) scale(0.05) translateY(20px); opacity: 0; }
 }
 
 .carrot-container.visible {

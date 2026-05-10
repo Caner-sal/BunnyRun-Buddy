@@ -52,12 +52,13 @@ export async function runCurrentFile(context: vscode.ExtensionContext): Promise<
   }
 
   const currentStats = stats.getStats();
+  const isDead = isError && currentStats.level <= 0;
 
   outputChannel.clear();
   outputChannel.appendLine('=== BunnyRun Buddy ===');
   outputChannel.appendLine(`File: ${result.filePath}`);
   outputChannel.appendLine(`Language: ${result.language}`);
-  outputChannel.appendLine(`Status: ${isError ? 'error' : 'success'}`);
+  outputChannel.appendLine(`Status: ${isDead ? 'dead' : isError ? 'error' : 'success'}`);
   outputChannel.appendLine(`Exit Code: ${result.exitCode ?? 0}`);
   outputChannel.appendLine(`Duration: ${result.durationMs}ms`);
   if (result.stdout) {
@@ -70,18 +71,37 @@ export async function runCurrentFile(context: vscode.ExtensionContext): Promise<
   }
   outputChannel.show(true);
 
-  BunnyPanel.postMessage({
-    type: 'runResult',
-    payload: {
-      status: isError ? 'error' : 'success',
-      stderr: result.stderr ?? '',
-      exitCode: result.exitCode ?? 0,
-      xp: currentStats.xp,
-      level: currentStats.level,
-      streak: currentStats.currentStreak,
-      bestStreak: currentStats.bestStreak,
-      carrotsEaten: currentStats.carrotsEaten,
-      petName: config.get<string>('petName', 'Bunny')
-    }
-  });
+  if (isDead) {
+    stats.resetOnDeath();
+    const resetStats = stats.getStats();
+    BunnyPanel.postMessage({
+      type: 'runResult',
+      payload: {
+        status: 'dead',
+        stderr: result.stderr ?? '',
+        exitCode: result.exitCode ?? 0,
+        xp: resetStats.xp,
+        level: resetStats.level,
+        streak: 0,
+        bestStreak: resetStats.bestStreak,
+        carrotsEaten: 0,
+        petName: config.get<string>('petName', 'Bunny')
+      }
+    });
+  } else {
+    BunnyPanel.postMessage({
+      type: 'runResult',
+      payload: {
+        status: isError ? 'error' : 'success',
+        stderr: result.stderr ?? '',
+        exitCode: result.exitCode ?? 0,
+        xp: currentStats.xp,
+        level: currentStats.level,
+        streak: currentStats.currentStreak,
+        bestStreak: currentStats.bestStreak,
+        carrotsEaten: currentStats.carrotsEaten,
+        petName: config.get<string>('petName', 'Bunny')
+      }
+    });
+  }
 }

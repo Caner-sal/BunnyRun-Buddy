@@ -60,13 +60,19 @@ export class StatsService {
 
   onFailure(): BunnyStats {
     const stats = this.getStats();
-    stats.xp += 2;
+    stats.xp -= 10;
     stats.failedRuns += 1;
     stats.currentStreak = 0;
     stats.lastRunAt = new Date().toISOString();
     stats.level = this.calculateLevel(stats.xp);
     this.save(stats);
     return stats;
+  }
+
+  resetOnDeath(): void {
+    const stats = this.getStats();
+    const best = stats.bestStreak;
+    this.save({ ...DEFAULT_STATS, bestStreak: best });
   }
 
   reset(): void {
