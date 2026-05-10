@@ -1,29 +1,39 @@
 # BunnyRun Buddy
 
-A cute coding companion for beginner programmers.
+A cute coding companion for beginner programmers — a VS Code extension that reacts when you run your code.
 
-BunnyRun Buddy is a VS Code and Antigravity-compatible extension that reacts when you run your code. If your code runs successfully, the bunny eats a carrot and celebrates. If your code fails, the bunny gets sad but encourages you to try again.
-
-![BunnyRun Buddy Demo](docs/assets/demo-placeholder.png)
+If your code runs successfully, the bunny eats a carrot and celebrates. If your code fails, the bunny gets sad and loses XP. Push your luck too far and the bunny **dies** — but respawns with a fresh start.
 
 ## Features
 
-- 🐰 Bunny companion panel that reacts to your code runs
-- 🥕 Success animations (carrot eating + floating hearts)
-- 😢 Friendly error animations (no judgement!)
-- ⭐ XP, level, and streak system
-- 🔥 Streak milestones with bonus XP
-- 💾 Local-only data storage (no cloud, no telemetry)
-- 📦 VSIX install support for Antigravity
+- **Bunny companion panel** — animated CSS bunny that lives in your sidebar
+- **Play button integration** — one click runs your file from the editor toolbar
+- **Success animations** — carrot eating, floating hearts, happy bounce
+- **Error animations** — sad shake, falling tears, cry emoji
+- **Death system** — enough errors drain XP to zero and the bunny collapses with a death animation, then respawns
+- **XP & level system** — +10 XP on success, −10 XP on failure; level derived from XP
+- **Streak bonuses** — bonus XP at 3-run and 5-run streaks
+- **Best streak tracking** — your record is preserved even after death
+- **Carrot milestones** — earn a carrot every 5 successful runs
+- **Auto-save** — file is saved before running so you always run the latest code
+- **Local-only storage** — no cloud, no telemetry, no account required
+
+## How XP & Death Works
+
+| Event | XP Change | Level |
+|---|---|---|
+| Successful run | +10 (or +25 / +40 with streak bonuses) | increases |
+| Failed run | −10 | decreases |
+| XP drops below 0 | bunny dies | resets to Lv.1 / 0 XP |
+| Death | best streak preserved; everything else resets | 1 |
 
 ## Commands
 
-| Command | Description |
-|---|---|
-| `Bunny: Start Companion` | Open the bunny companion panel |
-| `Bunny: Run Current File` | Run the active Python or JavaScript file |
-| `Bunny: Reset Stats` | Reset all XP, level, and streak data |
-| `Bunny: Toggle Sound` | Toggle sound effects on/off |
+| Command | Shortcut | Description |
+|---|---|---|
+| `Bunny: Run Current File` | `Ctrl+Alt+R` | Run the active Python or JavaScript file |
+| `Bunny: Start Companion` | — | Open the bunny companion panel |
+| `Bunny: Reset Stats` | — | Reset all XP, level, and streak data |
 
 ## Supported Languages
 
@@ -32,52 +42,47 @@ BunnyRun Buddy is a VS Code and Antigravity-compatible extension that reacts whe
 
 ## Installation
 
-### VS Code Development Mode
-
-1. Clone this repository
-2. Run `npm install`
-3. Press `F5` to open Extension Development Host
-4. Run `Bunny: Start Companion` from the Command Palette
-
 ### From VSIX
 
 1. Download the `.vsix` file from [Releases](https://github.com/Caner-sal/BunnyRun-Buddy/releases)
 2. In VS Code: `Extensions` → `...` → `Install from VSIX...`
 3. Select the downloaded file
 
-### Antigravity (VSIX Install)
+Or via terminal:
+```
+code --install-extension bunnyrun-buddy-0.1.0.vsix
+```
 
-See [docs/ANTIGRAVITY_INSTALL.md](docs/ANTIGRAVITY_INSTALL.md) for step-by-step instructions.
+### Development Mode
+
+```bash
+git clone https://github.com/Caner-sal/BunnyRun-Buddy.git
+cd BunnyRun-Buddy
+npm install
+# Press F5 in VS Code to open Extension Development Host
+```
 
 ## Settings
 
 | Setting | Default | Description |
 |---|---|---|
 | `bunnyrun.petName` | `"Bunny"` | Your companion's name |
+| `bunnyrun.runPythonCommand` | `"python"` | Python command (`py` on some Windows setups) |
+| `bunnyrun.runJavaScriptCommand` | `"node"` | Node.js command |
 | `bunnyrun.enableSounds` | `true` | Enable sound effects |
-| `bunnyrun.runPythonCommand` | `"python"` | Python command to use |
-| `bunnyrun.runJavaScriptCommand` | `"node"` | Node.js command to use |
+
+**Windows tip:** If Python doesn't run, set `bunnyrun.runPythonCommand` to `"py"` in your VS Code settings.
 
 ## Privacy
 
-BunnyRun Buddy runs **entirely locally**. It does not:
-- Send your code to any server
-- Collect any telemetry or usage data
-- Require an account or API key
-- Make any network requests
+BunnyRun Buddy runs **entirely locally**. It does not send your code to any server, collect telemetry, or make any network requests. All data (XP, streaks) is stored in VS Code's built-in local storage.
 
-All data (XP, streaks) is stored locally using VS Code's built-in storage.
+## Tech Stack
 
-## Known Limitations
-
-- The first version does not support a real desktop overlay
-- Antigravity support is tested through VSIX installation
-- Only Python and JavaScript are supported in MVP
-- TypeScript files require external compilation
-
-## Contributing
-
-See [AGENTS.md](AGENTS.md) for development agent prompts and [docs/PRODUCT_SPEC.md](docs/PRODUCT_SPEC.md) for the full product specification.
+- TypeScript + VS Code Extension API
+- Pure CSS animations (no canvas, no SVG, no image assets)
+- `child_process.spawn` for safe file execution
+- VS Code `globalState` for persistent storage
 
 ## License
 
