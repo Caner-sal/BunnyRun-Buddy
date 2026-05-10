@@ -31,11 +31,13 @@ export class JavaScriptRunner implements LanguageRunner {
       child.on('close', (code: number | null) => {
         const durationMs = Date.now() - start;
         const exitCode = code ?? 1;
+        const stdout = stdoutChunks.join('').trim();
+        const stderr = stderrChunks.join('').trim();
         resolve({
-          status: exitCode === 0 ? 'success' : 'error',
+          status: (exitCode === 0 && !stderr) ? 'success' : 'error',
           exitCode,
-          stdout: stdoutChunks.join('').trim(),
-          stderr: stderrChunks.join('').trim(),
+          stdout,
+          stderr,
           language: 'javascript',
           filePath: this.filePath,
           durationMs
