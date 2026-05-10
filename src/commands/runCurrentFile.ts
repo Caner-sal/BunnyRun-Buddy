@@ -18,6 +18,10 @@ export async function runCurrentFile(context: vscode.ExtensionContext): Promise<
     return;
   }
 
+  if (document.isDirty) {
+    await document.save();
+  }
+
   if (!outputChannel) {
     outputChannel = vscode.window.createOutputChannel('BunnyRun Buddy');
     context.subscriptions.push(outputChannel);
